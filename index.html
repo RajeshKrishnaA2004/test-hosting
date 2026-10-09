@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Explorer | Understand the Internet</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #080d18;
+            color: #eef3ff;
+            line-height: 1.6;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            border-bottom: 1px solid #202b40;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            color: #65e0ff;
+        }
+
+        nav a {
+            color: #c1cce0;
+            text-decoration: none;
+            margin-left: 24px;
+        }
+
+        nav a:hover {
+            color: #65e0ff;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px 80px;
+            background:
+                radial-gradient(ellipse at top, #153052 0%, #080d18 65%);
+        }
+
+        .tag {
+            display: inline-block;
+            color: #65e0ff;
+            border: 1px solid #315b79;
+            padding: 6px 14px;
+            border-radius: 30px;
+            margin-bottom: 24px;
+            font-size: 13px;
+        }
+
+        h1 {
+            font-size: clamp(38px, 6vw, 68px);
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        h1 span {
+            color: #65e0ff;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: 0 auto 30px;
+            color: #aab8ce;
+            font-size: 18px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 13px 24px;
+            background: #65e0ff;
+            color: #08111e;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .section {
+            padding: 75px 8%;
+        }
+
+        .section h2 {
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: #aab8ce;
+            margin-bottom: 35px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: #101a2b;
+            border: 1px solid #24334b;
+            border-radius: 14px;
+            padding: 25px;
+        }
+
+        .card .icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            color: #65e0ff;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #aab8ce;
+        }
+
+        .flow {
+            background: #0d1524;
+            border: 1px solid #24334b;
+            padding: 28px;
+            border-radius: 14px;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        .step {
+            display: inline-block;
+            padding: 14px 18px;
+            margin: 8px;
+            background: #152942;
+            border: 1px solid #315b79;
+            border-radius: 8px;
+        }
+
+        .arrow {
+            color: #65e0ff;
+            font-size: 22px;
+        }
+
+        .lookup {
+            max-width: 700px;
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #34445e;
+            background: #101a2b;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            padding: 14px 20px;
+            border-radius: 8px;
+            background: #65e0ff;
+            color: #08111e;
+            font-weight: bold;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #101a2b;
+            border: 1px solid #24334b;
+            color: #c1cce0;
+            overflow-wrap: anywhere;
+        }
+
+        .records {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .records th,
+        .records td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #24334b;
+        }
+
+        .records th {
+            color: #65e0ff;
+        }
+
+        .records td {
+            color: #c1cce0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #202b40;
+            color: #8493aa;
+        }
+
+        @media (max-width: 750px) {
+            nav {
+                padding: 18px 5%;
+            }
+
+            nav a {
+                margin-left: 10px;
+                font-size: 13px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 55px 6%;
+            }
+
+            .lookup {
+                flex-direction: column;
+            }
+
+            .records th,
+            .records td {
+                padding: 10px 6px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">DNS Explorer.</div>
+
+        <div>
+            <a href="#basics">Basics</a>
+            <a href="#process">Process</a>
+            <a href="#records">Records</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="tag">THE INTERNET, EXPLAINED</div>
+
+        <h1>Names for humans.<br>
+            <span>Addresses for computers.</span>
+        </h1>
+
+        <p>
+            Discover how DNS connects the domain names you remember
+            to the IP addresses computers use to communicate.
+        </p>
+
+        <a href="#basics" class="button">Explore DNS ↓</a>
+    </section>
+
+    <section class="section" id="basics">
+        <h2>What is DNS?</h2>
+
+        <p class="subtitle">
+            DNS stands for Domain Name System. Think of it as the
+            internet's phonebook.
+        </p>
+
+        <div class="grid">
+            <div class="card">
+                <div class="icon">🌐</div>
+                <h3>Domain Name</h3>
+                <p>A human-friendly website name, such as example.com.</p>
+            </div>
+
+            <div class="card">
+                <div class="icon">🔎</div>
+                <h3>DNS Lookup</h3>
+                <p>The process of finding the DNS information associated
+                   with a domain name.</p>
+            </div>
+
+            <div class="card">
+                <div class="icon">🖥️</div>
+                <h3>IP Address</h3>
+                <p>An address that helps your device locate a server
+                   across a network.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="process">
+        <h2>How DNS works</h2>
+
+        <p class="subtitle">
+            A simplified journey from a website name to its server.
+        </p>
+
+        <div class="flow">
+            <div class="step">You enter a domain</div>
+            <div class="arrow">↓</div>
+            <div class="step">DNS resolver checks its cache</div>
+            <div class="arrow">↓</div>
+            <div class="step">DNS records are looked up if needed</div>
+            <div class="arrow">↓</div>
+            <div class="step">Your browser connects to the server</div>
+            <div class="arrow">↓</div>
+            <div class="step">The website loads</div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Try a DNS lookup</h2>
+
+        <p class="subtitle">
+            Enter a domain to see a demonstration of a DNS lookup.
+        </p>
+
+        <form class="lookup" id="lookupForm">
+            <input
+                type="text"
+                id="domain"
+                placeholder="example.com"
+                aria-label="Domain name"
+                required
+            >
+            <button type="submit">Explain</button>
+        </form>
+
+        <div id="result" aria-live="polite">
+            Your explanation will appear here.
+        </div>
+    </section>
+
+    <section class="section" id="records">
+        <h2>Common DNS records</h2>
+
+        <p class="subtitle">
+            Different records provide different kinds of DNS information.
+        </p>
+
+        <table class="records">
+            <thead>
+                <tr>
+                    <th>Record</th>
+                    <th>Purpose</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td>Maps a name to an IPv4 address</td>
+                    <td>192.0.2.1</td>
+                </tr>
+
+                <tr>
+                    <td>AAAA</td>
+                    <td>Maps a name to an IPv6 address</td>
+                    <td>2001:db8::1</td>
+                </tr>
+
+                <tr>
+                    <td>CNAME</td>
+                    <td>Points one name to another name</td>
+                    <td>www → example.com</td>
+                </tr>
+
+                <tr>
+                    <td>MX</td>
+                    <td>Identifies mail servers</td>
+                    <td>mail.example.com</td>
+                </tr>
+
+                <tr>
+                    <td>TXT</td>
+                    <td>Stores text used for verification and configuration</td>
+                    <td>Domain verification</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        DNS Explorer · A simple introduction to how the internet works.
+    </footer>
+
+    <script>
+        const form = document.getElementById("lookupForm");
+        const domainInput = document.getElementById("domain");
+        const result = document.getElementById("result");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const domain = domainInput.value.trim();
+
+            if (!domain) {
+                result.textContent = "Please enter a domain name.";
+                return;
+            }
+
+            result.textContent =
+                "You entered: " + domain +
+                ". DNS helps find the network address associated with this " +
+                "domain. This page is a demonstration only; it does not " +
+                "perform a real DNS lookup.";
+        });
+    </script>
+
+</body>
+</html>
