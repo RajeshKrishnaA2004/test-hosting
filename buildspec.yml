@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Starting website build..."
+
+  pre_build:
+    commands:
+      - echo "Checking website files..."
+      - test -f index.html
+
+  build:
+    commands:
+      - echo "Building static website..."
+      - mkdir -p dist
+      - cp index.html dist/
+      - echo "Website build completed successfully."
+
+artifacts:
+  base-directory: dist
+  files:
+    - '**/*'
